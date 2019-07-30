@@ -20,7 +20,7 @@ namespace WINReplacer
             return JsonConvert.DeserializeObject<IndexedList>(File.ReadAllText($"{path}\\first.json"));
         }
 
-        public static FixedSizedQueue<App> LoadFavoritesConfig(string path)
+        public static FixedSizedQueue<App> LoadHistoryConfig(string path)
         {
             if (!Directory.Exists(path))
             {
@@ -28,7 +28,7 @@ namespace WINReplacer
             }
             if (!File.Exists($"{path}\\history.json"))
             {
-                FixedSizedQueue<App> create = new FixedSizedQueue<App>(10);
+                FixedSizedQueue<App> create = new FixedSizedQueue<App>();
                 SaveLastStartedConfig(path, create);
                 return create;
             }

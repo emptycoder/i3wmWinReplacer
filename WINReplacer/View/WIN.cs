@@ -16,6 +16,7 @@ namespace WINReplacer
         FixedSizedQueue<App> lastStartedApps;
         List<App> data;
         List<Label> data_controls = new List<Label>();
+        public static int ControlsCount { get; private set; }
         KeyHook keyHook;
         int nowElement = -1;
         string searchText = "";
@@ -25,11 +26,12 @@ namespace WINReplacer
         {
             InitializeComponent();
             ConfigPath = $"{PropsPath}\\SmartWIN";
-            this.lastStartedApps = ConfigLoader.LoadFavoritesConfig(ConfigPath);
+            this.lastStartedApps = ConfigLoader.LoadHistoryConfig(ConfigPath);
             this.Width = SystemInformation.PrimaryMonitorSize.Width;
             this.MaximumSize = this.MinimumSize = new Size(this.Width, 22);
             this.BackColor = Theme.FormBackColor;
-            this.Shown += delegate {
+            this.Shown += delegate
+            {
                 this.Hide();
                 //TODO: REMOVE WIN StartBTN
                 Process shellStart = new Process();
@@ -38,14 +40,13 @@ namespace WINReplacer
             };
 
             //Spawn controls
-            Label temp;
             searchBox.Location = new Point(50, 1);
             searchBox.Font = Theme.TextFont;
             searchBox.ForeColor = Theme.TextColor;
             searchBox.BackColor = Theme.BackColor;
             for (int pos_x = 280; pos_x + 202 < this.Width - 30; pos_x += tile_width)
             {
-                temp = new Label();
+                Label temp = new Label();
                 temp.Location = new Point(pos_x, 0);
                 temp.Size = new Size(tile_width, 25);
                 temp.TextAlign = ContentAlignment.MiddleCenter;
@@ -55,6 +56,7 @@ namespace WINReplacer
                 this.Controls.Add(temp);
                 data_controls.Add(temp);
             }
+            ControlsCount = data_controls.Count;
             //Start KeyHook
             keyHook = new KeyHook(this);
             keyHook.LeftArrowEvent += LeftArrClick;
@@ -77,15 +79,15 @@ namespace WINReplacer
                 List<App> get;
                 if ((get = finder.FindByName(searchBox.Text)) != null)
                 {
-                    data.AddRange(get.Count > 10 ? get.Take(10) : get);
-                    if (data.Count >= 10)
+                    data.AddRange(get.Count > ControlsCount ? get.Take(ControlsCount) : get);
+                    if (data.Count >= ControlsCount)
                     {
-                        return data.Take(10);
+                        return data.Take(ControlsCount);
                     }
                 }
             }
 
-            return data.Count == 0? null : data;
+            return data.Count == 0 ? null : data;
         }
 
         private void DrawApps()
@@ -160,9 +162,9 @@ namespace WINReplacer
             }
         }
 
-    //-------------------------------OWN EVENTS-------------------------------
+        //-------------------------------OWN EVENTS-------------------------------
 
-    private void ShowHideEvent()
+        private void ShowHideEvent()
         {
             if (this.Visible)
             {
@@ -218,8 +220,8 @@ namespace WINReplacer
             if (data.Count > nowElement || nowElement == -1)
             {
                 var app = data[nowElement == -1 ? 0 : data.Count - nowElement - 1];
-                app.StartProcess();
                 lastStartedApps.Enqueue(app);
+                app.StartProcess();
             }
             ShowHideEvent();
         }

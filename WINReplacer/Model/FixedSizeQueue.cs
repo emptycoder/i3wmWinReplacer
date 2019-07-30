@@ -6,12 +6,6 @@ namespace WINReplacer
     {
         ConcurrentQueue<T> queue = new ConcurrentQueue<T>();
         private object lockObject = new object();
-        readonly int limit;
-
-        public FixedSizedQueue(int limit)
-        {
-            this.limit = limit;
-        }
 
         public void Enqueue(T obj)
         {
@@ -19,7 +13,7 @@ namespace WINReplacer
             lock (lockObject)
             {
                 T overflow;
-                while (queue.Count > this.limit && queue.TryDequeue(out overflow)) ;
+                while (queue.Count > WIN.ControlsCount && queue.TryDequeue(out overflow)) ;
             }
         }
 
