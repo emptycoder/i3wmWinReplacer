@@ -53,7 +53,7 @@ namespace WINReplacer
                     {
                         if ((output = nextStep3.apps.FirstOrDefault(app => app.name == name)) != null)
                         {
-                            output.last_start = DateTime.Now;
+                            output.lastStart = DateTime.Now;
                             return false;
                         }
                         else

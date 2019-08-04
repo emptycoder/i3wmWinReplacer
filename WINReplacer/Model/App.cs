@@ -5,27 +5,35 @@ namespace WINReplacer
 {
     public sealed class App : IApp
     {
-        public string app_path;
+        public string appPath;
+        public string args;
         public string name;
-        public DateTime last_start;
+        public DateTime lastStart;
 
-        public App(string app_path, string name, DateTime last_start)
+        public App(string appPath, string name, DateTime lastStart)
         {
-
-            this.app_path = app_path;
+            this.appPath = appPath;
             this.name = name;
-            this.last_start = last_start;
+            this.lastStart = lastStart;
+        }
+
+        public App(string appPath, string name, string args, DateTime lastStart)
+        {
+            this.args = args;
+            this.appPath = appPath;
+            this.name = name;
+            this.lastStart = lastStart;
         }
 
         public bool StartProcess()
         {
-            last_start = DateTime.Now;
-            return Process.Start(app_path) == null? false : true;
+            lastStart = DateTime.Now;
+            return Process.Start(appPath, args) == null? false : true;
         }
 
         public override string ToString()
         {
-            return $"{name} -> ({app_path}): {last_start}";
+            return $"{name} -> ({appPath}): {lastStart}";
         }
     }
 }

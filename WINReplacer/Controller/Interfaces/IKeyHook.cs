@@ -13,6 +13,7 @@ namespace WINReplacer
         event KeyEventHandler RightArrowEvent;
         event KeyEventHandler OpenCloseEvent;
         event KeyEventHandler EnterClickEvent;
+        event KeyEventHandler ShutdownClickEvent;
         event KeyClick KeyClickEvent;
     }
 }

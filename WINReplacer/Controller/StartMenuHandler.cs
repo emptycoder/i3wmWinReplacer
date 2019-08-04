@@ -22,7 +22,7 @@ namespace WINReplacer
                     App output = firstSaved.TryToGetApp(name);
                     if (output != null)
                     {
-                        firstLevelProcessHashes.TryToAdd(name, symlink_path, output.last_start, ref output);
+                        firstLevelProcessHashes.TryToAdd(name, symlink_path, output.lastStart, ref output);
                     }
                     else
                     {

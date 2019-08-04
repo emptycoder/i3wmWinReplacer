@@ -26,6 +26,7 @@ namespace WINReplacer
         public event KeyEventHandler RightArrowEvent;
         public event KeyEventHandler OpenCloseEvent;
         public event KeyEventHandler EnterClickEvent;
+        public event KeyEventHandler ShutdownClickEvent;
         public event KeyClick KeyClickEvent;
 
         public KeyHook(Form form)
@@ -94,6 +95,13 @@ namespace WINReplacer
             startApps.Add(Keys.L, delegate
             {
                  Process.Start("rundll32.exe user32.dll,LockWorkStation");
+            });
+            startApps.Add(Keys.R, delegate {
+                Shell32.Shell shell = new Shell32.Shell();
+                shell.FileRun();
+            });
+            startApps.Add(Keys.D0, delegate {
+                ShutdownClickEvent?.Invoke();
             });
 
             hookDelegate = HookCallback;

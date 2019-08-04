@@ -32,23 +32,23 @@ namespace WINReplacer
 
         private static int Partition(ref List<App> unsort, int min, int max)
         {
-            DateTime pivot = unsort[min].last_start;
+            DateTime pivot = unsort[min].lastStart;
             while (true)
             {
 
-                while (unsort[min].last_start < pivot)
+                while (unsort[min].lastStart < pivot)
                 {
                     min++;
                 }
 
-                while (unsort[max].last_start > pivot)
+                while (unsort[max].lastStart > pivot)
                 {
                     max--;
                 }
 
                 if (min < max)
                 {
-                    if (unsort[min].last_start == unsort[max].last_start)
+                    if (unsort[min].lastStart == unsort[max].lastStart)
                     {
                         return max;
                     }

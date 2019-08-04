@@ -17,6 +17,18 @@ namespace WINReplacer
             }
         }
 
+        public bool Contains(T app)
+        {
+            foreach (T item in queue)
+            {
+                if (item.Equals(app))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public int Count()
         {
             return queue.Count;
