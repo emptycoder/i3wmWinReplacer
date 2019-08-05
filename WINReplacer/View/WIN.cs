@@ -214,6 +214,8 @@ namespace WINReplacer
                 this.Show();
             }
 
+            ConfigLoader.SaveLastStartedConfig(ConfigPath, lastStartedApps);
+
             foreach (IFinder finder in finders)
             {
                 finder.Save();

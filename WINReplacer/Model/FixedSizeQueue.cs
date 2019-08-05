@@ -4,8 +4,18 @@ namespace WINReplacer
 {
     public class FixedSizedQueue<T>
     {
-        ConcurrentQueue<T> queue = new ConcurrentQueue<T>();
+        ConcurrentQueue<T> queue;
         private object lockObject = new object();
+
+        public FixedSizedQueue()
+        {
+            queue = new ConcurrentQueue<T>();
+        }
+
+        public FixedSizedQueue(ConcurrentQueue<T> queue)
+        {
+            this.queue = queue;
+        }
 
         public void Enqueue(T obj)
         {
@@ -37,6 +47,11 @@ namespace WINReplacer
         public T[] ToArray()
         {
             return queue.ToArray();
+        }
+
+        public ConcurrentQueue<T> GetQueue()
+        {
+            return queue;
         }
     }
 }

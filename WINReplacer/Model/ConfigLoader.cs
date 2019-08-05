@@ -1,10 +1,22 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
+using WINReplacer.JsonConverters;
 
 namespace WINReplacer
 {
-    class ConfigLoader
+    public class ConfigLoader
     {
+        static ConfigLoader()
+        {
+            JsonConvert.DefaultSettings = () =>
+            {
+                var settings = new JsonSerializerSettings();
+                settings.Converters.Add(new JsonFixedSizeQueueConverter());
+                settings.Converters.Add(new JsonIndexedListConverter());
+                return settings;
+            };
+        }
+
         public static IndexedList LoadFirstHashConfig(string path)
         {
             if (!Directory.Exists(path))

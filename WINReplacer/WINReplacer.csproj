@@ -80,6 +80,9 @@
     <Compile Include="Model\Interfaces\IApp.cs" />
     <Compile Include="Model\Interfaces\IFinder.cs" />
     <Compile Include="Model\Interfaces\IIndexedList.cs" />
+    <Compile Include="Model\JsonConverters\JsonFixedSizeQueueConverter.cs" />
+    <Compile Include="Model\JsonConverters\JsonIndexedListConverter.cs" />
+    <Compile Include="Model\ListExtension.cs" />
     <Compile Include="Model\QuickSort.cs" />
     <Compile Include="View\Theme.cs" />
     <Compile Include="View\WIN.cs">

@@ -10,6 +10,8 @@ namespace WINReplacer
         public string name;
         public DateTime lastStart;
 
+        public App() { }
+
         public App(string appPath, string name, DateTime lastStart)
         {
             this.appPath = appPath;

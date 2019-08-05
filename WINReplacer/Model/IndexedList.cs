@@ -1,35 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WINReplacer.ListExtension;
+using ListExtension;
 
 namespace WINReplacer
 {
-    namespace ListExtension
-    {
-        public static class ListExtension
-        {
-            public static void RemoveByName(this List<App> apps, string name)
-            {
-                for (int i = 0; i < apps.Count; i++)
-                {
-                    if (apps[i].name == name)
-                    {
-                        apps.RemoveAt(i);
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
     public class IndexedList : IIndexedList
     {
-        private HashSet<Index> indexed_array;
+        private HashSet<Index> indexedArray;
 
         public IndexedList()
         {
-            indexed_array = new HashSet<Index>();
+            indexedArray = new HashSet<Index>();
+        }
+
+        public IndexedList(HashSet<Index> indexedArray)
+        {
+            this.indexedArray = indexedArray;
+        }
+
+        public HashSet<Index> GetIndexedArray()
+        {
+            return indexedArray;
         }
 
         public bool TryToAdd(string name, string path, ref App output)
@@ -45,7 +37,7 @@ namespace WINReplacer
             string sec_name = sub_name.Substring(0, 2);
             string fir_name = sub_name.Substring(0, 1);
 
-            if (indexed_array.TryGetValue(new Index(fir_name), out Index nextStep1))
+            if (indexedArray.TryGetValue(new Index(fir_name), out Index nextStep1))
             {
                 if (nextStep1.nextIndex.TryGetValue(new Index(sec_name), out Index nextStep2))
                 {
@@ -94,7 +86,7 @@ namespace WINReplacer
             else
             {
                 output = new App(path, name, last_start);
-                indexed_array.Add(
+                indexedArray.Add(
                     new Index(
                         fir_name,
                         null,
@@ -124,7 +116,7 @@ namespace WINReplacer
             if (pattern.Length < 2) return null;
             pattern = pattern.ToLower();
 
-            if (indexed_array.TryGetValue(new Index(pattern.Substring(0, 1)), out Index nextStep1))
+            if (indexedArray.TryGetValue(new Index(pattern.Substring(0, 1)), out Index nextStep1))
             {
                 if (nextStep1.nextIndex.TryGetValue(new Index(pattern.Substring(0, 2)), out Index nextStep2))
                 {
@@ -150,7 +142,7 @@ namespace WINReplacer
             if (name.Length < 2) return null;
             name = name.ToLower();
 
-            if (indexed_array.TryGetValue(new Index(name.Substring(0, 1)), out Index nextStep1))
+            if (indexedArray.TryGetValue(new Index(name.Substring(0, 1)), out Index nextStep1))
             {
                 if (nextStep1.nextIndex.TryGetValue(new Index(name.Substring(0, 2)), out Index nextStep2))
                 {
@@ -174,7 +166,7 @@ namespace WINReplacer
             name = (name.Length > 3) ? name.Substring(0, 3) : ThreeSymbolFix(name);
             name = name.ToLower();
 
-            if (indexed_array.TryGetValue(new Index(name.Substring(0, 1)), out Index nextStep1))
+            if (indexedArray.TryGetValue(new Index(name.Substring(0, 1)), out Index nextStep1))
             {
                 if (nextStep1.nextIndex.TryGetValue(new Index(name.Substring(0, 2)), out Index nextStep2))
                 {
