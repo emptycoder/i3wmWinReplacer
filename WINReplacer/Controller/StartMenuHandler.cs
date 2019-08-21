@@ -17,20 +17,20 @@ namespace WINReplacer
                 foreach (string symlink_path in Directory.GetFiles(menu_path, "*.lnk", SearchOption.AllDirectories))
                 {
                     string name = Path.GetFileNameWithoutExtension(symlink_path).ToLower();
-                    string real_path = Symlink.GetRealPath(symlink_path);
-                    if (Path.GetExtension(real_path) != ".exe") continue;
+                    var link = Symlink.GetRealPath(symlink_path);
+                    if (Path.GetExtension(link.TargetPath) != ".exe") continue;
                     App output = firstSaved.TryToGetApp(name);
                     if (output != null)
                     {
-                        firstLevelProcessHashes.TryToAdd(name, symlink_path, output.lastStart, ref output);
+                        firstLevelProcessHashes.TryToAdd(name, link.TargetPath, output.lastStart, ref output, link.Arguments);
                     }
                     else
                     {
-                        firstLevelProcessHashes.TryToAdd(name, symlink_path, ref output);
+                        firstLevelProcessHashes.TryToAdd(name, link.TargetPath, ref output, link.Arguments);
                     }
-                    if (!processExeNames.ContainsKey(real_path))
+                    if (!processExeNames.ContainsKey(link.TargetPath))
                     {
-                        processExeNames.Add(real_path, output);
+                        processExeNames.Add(link.TargetPath, output);
                     }
                 }
             }
@@ -58,27 +58,36 @@ namespace WINReplacer
 
         private void OnCreated(object source, FileSystemEventArgs e)
         {
-            Console.WriteLine("CREATE: " + e.FullPath);
-            string real_path = Symlink.GetRealPath(e.FullPath);
-            string product_name = FileVersionInfo.GetVersionInfo(real_path).ProductName;
-            App app = null;
-            if (this.firstLevelProcessHashes.TryToAdd(product_name == null? e.Name.ToLower() : product_name.ToLower(), real_path, ref app))
+            try
             {
-                if (!processExeNames.ContainsKey(real_path))
+                Console.WriteLine("CREATE: " + e.FullPath);
+                var link = Symlink.GetRealPath(e.FullPath);
+                string product_name = FileVersionInfo.GetVersionInfo(link.TargetPath).ProductName;
+                App app = null;
+                if (this.firstLevelProcessHashes.TryToAdd(product_name == null ? e.Name.ToLower() : product_name.ToLower(), link.TargetPath, ref app, link.Arguments))
                 {
-                    processExeNames.Add(real_path, app);
+                    if (!processExeNames.ContainsKey(link.TargetPath))
+                    {
+                        processExeNames.Add(link.TargetPath, app);
+                    }
                 }
             }
+            catch { }
         }
 
         private void OnDeleted(object source, FileSystemEventArgs e)
         {
-            Console.WriteLine("DELETE: " + e.FullPath);
-            string real_path = Symlink.GetRealPath(e.FullPath);
-            if (processExeNames.ContainsKey(real_path))
+            try
             {
-                processExeNames.Remove(real_path);
+                Console.WriteLine("DELETE: " + e.FullPath);
+                var link = Symlink.GetRealPath(e.FullPath);
+                //Delete from hashes
+                if (processExeNames.ContainsKey(link.TargetPath))
+                {
+                    processExeNames.Remove(link.TargetPath);
+                }
             }
+            catch { }
         }
 
         public List<App> FindByName(string name)

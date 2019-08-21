@@ -14,25 +14,6 @@ namespace WINReplacer
         protected IndexedList secondLevelProcessHashes; //For addiction process, but if u use portable versions of progs it will be impact
         protected Dictionary<string, App> processExeNames;
 
-        public struct ProcessHash : IEquatable<ProcessHash>
-        {
-            public string Name;
-            public string Path;
-            public DateTime LiveHashTime;
-
-            public ProcessHash(string Name, string Path, DateTime LiveHashTime)
-            {
-                this.Name = Name;
-                this.Path = Path;
-                this.LiveHashTime = LiveHashTime;
-            }
-
-            public bool Equals(ProcessHash other)
-            {
-                return this.Name == other.Name;
-            }
-        }
-
         public ProcessWatcher(string ConfigPath)
         {
             this.ConfigPath = ConfigPath;
@@ -81,14 +62,16 @@ namespace WINReplacer
             try
             {
                 string fullpath = Process.GetProcessById(Convert.ToInt32(e.NewEvent.Properties["ProcessID"].Value)).MainModule.FileName;
-                if (this.processExeNames.TryGetValue(fullpath, out App app))
+                string productName = FileVersionInfo.GetVersionInfo(fullpath).ProductName;
+                productName = productName == null ? Path.GetFileNameWithoutExtension(fullpath).ToLower() : productName.ToLower();
+
+                if (this.processExeNames.TryGetValue(fullpath, out App app) || (app = firstLevelProcessHashes.TryToGetApp(productName)) != null)
                 {
                     app.lastStart = DateTime.Now;
                 }
                 else
                 {
-                    string productName = FileVersionInfo.GetVersionInfo(fullpath).ProductName;
-                    this.secondLevelProcessHashes.TryToAdd(productName == null? Path.GetFileNameWithoutExtension(fullpath).ToLower() : productName.ToLower(), fullpath, ref app);
+                    this.secondLevelProcessHashes.TryToAdd(productName, fullpath, ref app);
                     this.processExeNames.Add(fullpath, app);
                 }
 

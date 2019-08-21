@@ -23,7 +23,7 @@ namespace WINReplacer
                 }
             }*/
             Timer timer = new Timer();
-            timer.Interval = 3;
+            timer.Interval = 10;
             timer.Elapsed += delegate
             {
                 IntPtr hWnd = FindWindow("Shell_TrayWnd", null);

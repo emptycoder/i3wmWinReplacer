@@ -24,12 +24,12 @@ namespace WINReplacer
             return indexedArray;
         }
 
-        public bool TryToAdd(string name, string path, ref App output)
+        public bool TryToAdd(string name, string path, ref App output, string args = null)
         {
-            return TryToAdd(name, path, DateTime.Now, ref output);
+            return TryToAdd(name, path, DateTime.Now, ref output, args);
         }
 
-        public bool TryToAdd(string name, string path, DateTime last_start, ref App output)
+        public bool TryToAdd(string name, string path, DateTime last_start, ref App output, string args = null)
         {
             name = name.ToLower();
             string sub_name = (name.Length > 3) ? name.Substring(0, 3) : ThreeSymbolFix(name);
@@ -50,14 +50,14 @@ namespace WINReplacer
                         }
                         else
                         {
-                            output = new App(path, name, last_start);
+                            output = new App(path, name, args, last_start);
                             nextStep3.apps.Add(output);
                             nextStep2.apps.Add(output);
                         }
                     }
                     else
                     {
-                        output = new App(path, name, DateTime.Now);
+                        output = new App(path, name, args, DateTime.Now);
                         nextStep2.nextIndex.Add(
                             new Index(
                                 sub_name,
@@ -68,7 +68,7 @@ namespace WINReplacer
                 }
                 else
                 {
-                    output = new App(path, name, last_start);
+                    output = new App(path, name, args, last_start);
                     nextStep1.nextIndex.Add(
                         new Index(
                             sec_name,
@@ -85,7 +85,7 @@ namespace WINReplacer
             }
             else
             {
-                output = new App(path, name, last_start);
+                output = new App(path, name, args, last_start);
                 indexedArray.Add(
                     new Index(
                         fir_name,

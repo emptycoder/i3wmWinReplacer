@@ -203,7 +203,7 @@ namespace WINReplacer
         private void ShutdownClick()
         {
             data = new List<App>() {
-                new App("", "hibernation", DateTime.Now),
+                new App("shutdown", "hibernation", "/h /t 0", DateTime.Now),
                 new App("shutdown", "reboot", "/r /t 0", DateTime.Now),
                 new App("shutdown", "shutdown", "/s /t 0", DateTime.Now)
             };
