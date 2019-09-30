@@ -122,13 +122,13 @@ namespace WINReplacer
                 {
                     if (pattern.Length == 2)
                     {
-                        QuickSort.Sort(ref nextStep2.apps, 0, WIN.ControlsCount);
+                        Sort.AscSort(ref nextStep2.apps);
                         return nextStep2.apps;
                     }
 
                     if (nextStep2.nextIndex.TryGetValue(new Index(pattern.Substring(0, 3)), out Index nextStep3))
                     {
-                        QuickSort.Sort(ref nextStep3.apps, pattern, 0, WIN.ControlsCount);
+                        Sort.AscSort(ref nextStep3.apps, pattern);
                         return nextStep3.apps;
                     }
                 }

@@ -29,6 +29,7 @@ namespace WINReplacer
 
         protected List<App> FindByPattern(string pattern)//TODO: reworking answer + alghoritm
         {
+            int startTime = Environment.TickCount;
             List<App> apps = secondLevelProcessHashes.TryToFind(pattern);
             List<App> get = firstLevelProcessHashes.TryToFind(pattern);
 
@@ -53,6 +54,7 @@ namespace WINReplacer
                 }
                 if (apps.Count == 0) { apps = null; }
             }
+            Console.WriteLine($"Find by pattern time: {Environment.TickCount - startTime}");
 
             return apps;
         }
@@ -62,22 +64,26 @@ namespace WINReplacer
             try
             {
                 string fullpath = Process.GetProcessById(Convert.ToInt32(e.NewEvent.Properties["ProcessID"].Value)).MainModule.FileName;
+                if (fullpath.ToLower().StartsWith("c:\\windows\\")) { return; }
                 string productName = FileVersionInfo.GetVersionInfo(fullpath).ProductName;
+                int startTime = Environment.TickCount;
                 productName = productName == null ? Path.GetFileNameWithoutExtension(fullpath).ToLower() : productName.ToLower();
 
                 if (this.processExeNames.TryGetValue(fullpath, out App app) || (app = firstLevelProcessHashes.TryToGetApp(productName)) != null)
                 {
+                    Logger.log.Info($"Update time: {fullpath}, {productName}");
                     app.lastStart = DateTime.Now;
                 }
                 else
                 {
+                    Logger.log.Info($"Added to secondLevelHash: {fullpath}, {productName}");
                     this.secondLevelProcessHashes.TryToAdd(productName, fullpath, ref app);
                     this.processExeNames.Add(fullpath, app);
                 }
 
-                Console.WriteLine($"Added: {fullpath}");
+                Console.WriteLine($"Process created time: {Environment.TickCount - startTime}");
             }
-            catch { }
+            catch { } //If process ended earlier
         }
 
         protected void DisposeProcessWatcher()
