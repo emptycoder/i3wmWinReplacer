@@ -20,7 +20,7 @@ In development
 ![First look](https://github.com/emptycoder/i3wmWinReplacer/blob/master/Documentation/Images/i3wmWIN.png)
 
 ## About:
-The i3wmWinReplacer project was developed under the [MIT license](LICENSE).
+The i3wmWinReplacer project developing under the [MIT license](LICENSE).
 
 ## CMD Commands:
 1) "ms-settings:" - open Windows 10 settings
